@@ -8,9 +8,17 @@ namespace BitDefender_Module
     {
         static void Main(string[] args)
         {
+            string key = "b591e790577192589ac87754f1bb030784efe16d78d03989a62d8a2e17dd8cb9";
+            string hosturl = "https://digi360.us";
+            SubscribeToEventTypes(key,hosturl);
+            
+
+        }
+        private static string SubscribeToEventTypes(string key,string hostUrl)
+        {
             string apiURL = "https://cloud.gravityzone.bitdefender.com/api/v1.0/jsonrpc/";
             Client rpcClient = new Client(apiURL + "push");
-            string apiKey = "<<Insertbitdefederkey>>";
+            string apiKey = key;
             string userPassString = apiKey + ":";
             string authorizationHeader = System.Convert.ToBase64String(
             System.Text.Encoding.UTF8.GetBytes(userPassString));
@@ -23,7 +31,7 @@ namespace BitDefender_Module
                 'serviceSettings': {
                     'url':'<<HOST-URL>>',
                     'requireValidSslCertificate': false,
-                    'authorization': '<<BASE64ENCODED>>'
+                    'authorization': 'YjU5MWU3OTA1NzcxOTI1ODlhYzg3NzU0ZjFiYjAzMDc4NGVmZTE2ZDc4ZDAzOTg5YTYyZDhhMmUxN2RkOGNiOTo='
 
 
                  },
@@ -60,11 +68,8 @@ namespace BitDefender_Module
             Request request = rpcClient.NewRequest(
             "setPushEventSettings", parameters);
             Response response = rpcClient.Rpc(request);
-           
-                //JToken result = response.Result;
-               Console.WriteLine(response.ToString());
-            
 
+            return response.ToString();
         }
     }
 }
