@@ -12,10 +12,12 @@ namespace BitDefender_Module
         static void Main(string[] args)
         {
             key = "b591e790577192589ac87754f1bb030784efe16d78d03989a62d8a2e17dd8cb9";
-            hostUrl = "https://digi360.us";
-            SubscribeToEventTypes(key,hostUrl);
-            GetPushedEventSettings();
-            GetPushEventsStats();
+            hostUrl = "https://connector.digi360.us:3200/api";
+            //SubscribeToEventTypes(key,hostUrl);
+            //GetPushedEventSettings();
+            //GetPushEventsStats();
+            SendTestPushEvent();
+
         }
         private static string SubscribeToEventTypes(string key,string hostUrl)
         {
@@ -112,6 +114,28 @@ namespace BitDefender_Module
             Response response = rpcClient.Rpc(request);
             Console.WriteLine(response.ToString());
 
+        }
+        private static void SendTestPushEvent()
+        {
+            string apiURL = "https://cloud.gravityzone.bitdefender.com/api/v1.0/jsonrpc/";
+            Client rpcClient = new Client(apiURL + "push");
+            string apiKey = key;
+            string userPassString = apiKey + ":";
+            string authorizationHeader = System.Convert.ToBase64String(
+            System.Text.Encoding.UTF8.GetBytes(userPassString));
+            rpcClient.Headers.Add("Authorization",
+            "Basic " + authorizationHeader);
+
+            JToken parameters = JToken.Parse(@"{
+                                                  'eventType':'av',
+                                                  'data': {
+                                                        'malware_name':'2021 malware'
+                                                    }
+                                                }");
+            Request request = rpcClient.NewRequest(
+            "sendTestPushEvent", parameters);
+            Response response = rpcClient.Rpc(request);
+            Console.WriteLine(response.ToString());
         }
     }
     public struct subscribeToEventTypes
